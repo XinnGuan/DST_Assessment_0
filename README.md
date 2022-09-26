@@ -2,3 +2,4 @@
 Group project
 * this is big bullet point
   - this is small bullet point
+use \ to make a new line
