@@ -4,7 +4,5 @@ author: "Xin Guan"
 date: "04/10/2022"
 output: html_document
 ---
-```{r}
-summary(CDC_Health_Data)
-```
+* The data is categorised into two different types: quantitative and qualitative.
 
