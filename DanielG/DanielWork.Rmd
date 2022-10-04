@@ -1,6 +1,0 @@
-This will be my initial data visualization for the group
-
-```{r}
-print("hello")
-```
-
