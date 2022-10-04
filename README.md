@@ -9,5 +9,6 @@
 
 * Xinyu Li
 
+This project has a 25/25/25/25 equity split between the four project partners.
 
 ## Reading order
