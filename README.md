@@ -1,13 +1,13 @@
 # DST_Assessment_0
 ## Group project
 
-*Tom Blain
+* Tom Blain
 
-*Daniel Gardner
+* Daniel Gardner
 
-*Xinyue Guan
+* Xinyue Guan
 
-*Xinyu Li
+* Xinyu Li
 
 
 two enters 
