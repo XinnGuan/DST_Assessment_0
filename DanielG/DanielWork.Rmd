@@ -1,1 +1,14 @@
-test
+Test code for reading data
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data<-read.csv("~/_Uni/Maths/Year 4/Data Science Toolkit/CDC_Health_Data.csv")
+```
+
+```{r}
+head(data)
+```
+
