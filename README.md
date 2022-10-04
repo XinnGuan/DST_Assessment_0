@@ -10,6 +10,4 @@
 * Xinyu Li
 
 
-two enters 
-
-to make a new line
+## Reading order
