@@ -7,14 +7,16 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
 
 ```{r}
-print("hello")
+library(readr)
+library(dplyr)
+
+data1 <- read_csv("C:\\Users\\thoma\\Documents\\GitHub\\DST_Assessment_0\\Report\\CDC_Health_Data.csv")
+
+dataMale <- filter(data1, Gender == 'Male')
+dataObese <- filter(dataMale, Question == 'Percent of adults aged 18 years and older who have obesity')
+data2014 <- filter(dataObese, YearStart == '2014')
+data2014
 ```
 
