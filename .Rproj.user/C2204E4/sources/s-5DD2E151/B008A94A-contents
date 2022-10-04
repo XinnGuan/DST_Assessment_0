@@ -1,10 +1,9 @@
 ---
-title: "Untitled"
-author: "Xin Guan"
-date: "04/10/2022"
+title: "R-Analysis"
+author: "Tom Blain, Daniel Gardner, Xin Guan, Xinyu Li"
+date: "05/10/2022"
 output: html_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
