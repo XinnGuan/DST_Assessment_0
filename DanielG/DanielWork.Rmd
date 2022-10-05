@@ -22,6 +22,12 @@ head(obs_men_11)
 ```
 ```{r}
 ranked<-obs_men_11[order(obs_men_11$Data_Value),]
-barplot(height=ranked$Data_Value,names.arg=ranked$LocationDesc,las=2)
+barplot(height=ranked$Data_Value,names.arg=ranked$LocationDesc,las=2,ylab="Percentage of Adults with Obesity",main="Percentage of Adults with Obesity by US State",col='orange')
+```
+
+
+
+```{r}
+hist(ranked$Data_Value,breaks=20)
 ```
 
