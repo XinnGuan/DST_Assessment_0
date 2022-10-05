@@ -1,10 +1,18 @@
 ---
-title: "Untitled"
+title: "Work"
 author: "Xin Guan"
 date: "04/10/2022"
 output: html_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+#Import Data
+```{r}
+library(readr) #For read_csv
+library(dplyr)
+library("fs") # for cross-platform directories (path_wd)
+library("knitr") # For kable 
+data <- read_csv(path_wd("Report","CDC_Health_Data.csv"))
 ```
 
