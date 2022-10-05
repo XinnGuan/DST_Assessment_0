@@ -11,4 +11,11 @@ data<-read.csv("~/_Uni/Maths/Year 4/Data Science Toolkit/CDC_Health_Data.csv")
 ```{r}
 head(data)
 ```
+```{r}
+data_al<-data[data$LocationAbbr=="AL",]
+head(data_al)
+```
+```{r}
+obs<-na.omit(data_al$Data_Value)
+```
 
