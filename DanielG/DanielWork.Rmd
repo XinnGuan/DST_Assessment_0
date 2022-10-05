@@ -16,6 +16,12 @@ data_al<-data[data$LocationAbbr=="AL",]
 head(data_al)
 ```
 ```{r}
-obs<-na.omit(data_al$Data_Value)
+obs_men<-data[(data$QuestionID=="Q036"&data$StratificationID1=="MALE"),]
+obs_men_11<-obs_men[(obs_men$YearStart==2011&obs_men$YearEnd==2011),]
+head(obs_men_11)
+```
+```{r}
+ranked<-obs_men_11[order(obs_men_11$Data_Value),]
+barplot(height=ranked$Data_Value,names.arg=ranked$LocationDesc,las=2)
 ```
 
