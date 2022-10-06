@@ -8,9 +8,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r}
-library(readr) #For read_csv
-library(dplyr)
+if(!require("readr")) install.packages("readr")
+if(!require("dplyr")) install.packages("dplyr")
 library("fs") # for cross-platform directories (path_wd)
+library("readr") #For read_csv
+library("dplyr")
 library("knitr") # For kable 
 ```
 ```{r}
