@@ -16,7 +16,7 @@ library("dplyr")
 library("knitr") # For kable 
 ```
 ```{r}
-data <- read_csv(path_wd("CDC_Health_Data.csv"))
+data <- read_csv(path_wd("01-Data.csv"))
 ```
 
 
