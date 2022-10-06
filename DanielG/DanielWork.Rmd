@@ -30,4 +30,4 @@ barplot(height=ranked$Data_Value,names.arg=ranked$LocationDesc,las=2,ylab="Perce
 ```{r}
 hist(ranked$Data_Value,breaks=20)
 ```
-
+world values surevy
