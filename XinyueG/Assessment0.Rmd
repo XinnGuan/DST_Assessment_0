@@ -17,6 +17,25 @@ library("knitr") # For kable
 
 # Import Data
 ```{r}
-data <- read_csv("~/Desktop/DST/DST_Assessment_0/Report/CDC_Health_Data.csv")
+data <- read_csv("~/Desktop/DST/DST_Assessment_0/Report/01-Data.csv")
 ```
+```{r}
+head(data)
+```
+```{r}
+summary(data)
+```
+```{r}
+barplot((sort(table(data[,"Embarked"]))),names.arg=c("Cherbourg","Queenstown","Southampton"))
+```
+
+
+
+
+
+
+
+
+
+
 
