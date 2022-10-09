@@ -8,26 +8,73 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 # Install packages
+
 ```{r}
 library(readr) #For read_csv
 library(dplyr)
 library("fs") # for cross-platform directories (path_wd)
 library("knitr") # For kable 
+library("gplots")
 ```
 
 # Import Data
+
 ```{r}
 data <- read_csv("~/Desktop/DST/DST_Assessment_0/Report/01-Data.csv")
+data.f= as.data.frame(data)
+#read_csv imported data as tbl which is a subclass of data frame, however it behaves differentlt so I convert it to data.frame format.
 ```
 ```{r}
-head(data)
+head(data.f)
 ```
 ```{r}
-summary(data)
+summary(data.f)
 ```
 ```{r}
-barplot((sort(table(data[,"Embarked"]))),names.arg=c("Cherbourg","Queenstown","Southampton"))
+barplot((sort(table(data.f[,"Embarked"]))),names.arg=c("Cherbourg","Queenstown","Southampton"))
 ```
+
+```{r}
+data.f<-data.f[-which(is.na(data.f$Embarked)),]
+```
+
+```{r}
+labs=unique(as.character(data.f[,"Embarked"]))
+names(labs)=labs
+
+list=lapply(labs,function(x){
+  data.f[data.f[,"Embarked"]==x,1:11]
+})
+```
+```{r}
+data.f %>% count(Embarked)
+```
+
+
+
+```{r}
+labs
+list
+```
+
+```{r}
+datamean=t(sapply(list,function(x)colMeans(x[,c(3,6,7,8,10)])))
+heatmap.2(datamean,trace="none")
+```
+```{r}
+datamean
+# We can see that Age mean is not calculated since we have missing data.
+```
+```{r}
+#Plot heatmap withou Age variable
+datamean2=t(sapply(list,function(x)colMeans(x[,c(3,7,8,10)])))
+heatmap.2(datamean2,trace="none",margins=c(7,3))
+```
+```{r}
+datamean2
+```
+
+
 
 
 
