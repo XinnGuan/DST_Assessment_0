@@ -33,9 +33,16 @@ summary(data.f)
 ```{r}
 barplot((sort(table(data.f[,"Embarked"]))),names.arg=c("Cherbourg","Queenstown","Southampton"))
 ```
+```{r}
+barplot((table(data.f[,"Sex"])),names.arg=c("female","male"))
+```
+
+
+
 
 ```{r}
 data.f<-data.f[-which(is.na(data.f$Embarked)),]
+#Remove the rows with NA for Embarked variable.
 ```
 
 ```{r}
@@ -45,17 +52,14 @@ names(labs)=labs
 list=lapply(labs,function(x){
   data.f[data.f[,"Embarked"]==x,1:11]
 })
+#Separate data in to three sub-data by the port of embark.
 ```
+
 ```{r}
 data.f %>% count(Embarked)
+# Count each numbers of each value in the Embarked variable
 ```
 
-
-
-```{r}
-labs
-list
-```
 
 ```{r}
 datamean=t(sapply(list,function(x)colMeans(x[,c(3,6,7,8,10)])))
@@ -70,9 +74,36 @@ datamean
 datamean2=t(sapply(list,function(x)colMeans(x[,c(3,7,8,10)])))
 heatmap.2(datamean2,trace="none",margins=c(7,3))
 ```
+
 ```{r}
-datamean2
+data.f %>% count(Sex)
 ```
+
+```{r}
+genders=unique(as.character(data.f[,"Sex"]))
+names(genders)=genders
+genders_data=lapply(genders,function(x){
+  data.f[data.f[,"Sex"]==x,]
+})
+male_data<-genders_data[1]
+female_data<-genders_data[2]
+female_data= as.data.frame(female_data)
+male_data= as.data.frame(male_data)
+# Separate data into two sub data by gnders
+```
+
+```{r}
+fe_sur_rate <- sum(female_data$female.Survived)/dim(female_data)[1]
+
+male_sur_rate <- sum(male_data$male.Survived)/dim(male_data)[1]
+```
+
+```{r}
+fe_sur_rate
+male_sur_rate
+```
+
+
 
 
 
