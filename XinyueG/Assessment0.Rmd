@@ -89,7 +89,7 @@ male_data<-genders_data[1]
 female_data<-genders_data[2]
 female_data= as.data.frame(female_data)
 male_data= as.data.frame(male_data)
-# Separate data into two sub data by gnders
+# Separate data into two sub data by genders
 ```
 
 ```{r}
