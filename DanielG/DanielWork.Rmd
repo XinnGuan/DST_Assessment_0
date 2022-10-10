@@ -4,30 +4,5 @@ Test code for reading data
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-data<-read.csv("~/_Uni/Maths/Year 4/Data Science Toolkit/CDC_Health_Data.csv")
-```
+Looking at survival data for passengers on the titanic 
 
-```{r}
-head(data)
-```
-```{r}
-data_al<-data[data$LocationAbbr=="AL",]
-head(data_al)
-```
-```{r}
-obs_men<-data[(data$QuestionID=="Q036"&data$StratificationID1=="MALE"),]
-obs_men_11<-obs_men[(obs_men$YearStart==2011&obs_men$YearEnd==2011),]
-head(obs_men_11)
-```
-```{r}
-ranked<-obs_men_11[order(obs_men_11$Data_Value),]
-barplot(height=ranked$Data_Value,names.arg=ranked$LocationDesc,las=2,ylab="Percentage of Adults with Obesity",main="Percentage of Adults with Obesity by US State",col='orange')
-```
-
-
-
-```{r}
-hist(ranked$Data_Value,breaks=20)
-```
-world values surevy
