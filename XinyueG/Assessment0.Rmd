@@ -62,18 +62,18 @@ data.f %>% count(Embarked)
 
 
 ```{r}
-datamean=t(sapply(list,function(x)colMeans(x[,c(3,6,7,8,10)])))
-heatmap.2(datamean,trace="none")
+#datamean=t(sapply(list,function(x)colMeans(x[,c(3,6,7,8,10)])))
+#heatmap.2(datamean,trace="none")
 ```
-```{r}
-datamean
-# We can see that Age mean is not calculated since we have missing data.
-```
+# If we run this chunk, we will get error, this is because that the Age mean is not calculated since we have missing data.
+
 ```{r}
 #Plot heatmap withou Age variable
 datamean2=t(sapply(list,function(x)colMeans(x[,c(3,7,8,10)])))
 heatmap.2(datamean2,trace="none",margins=c(7,3))
 ```
+# From the heat map, we can see that only the fare depend on the port of embark, the other three numerical variables are independent of the port of embark.
+
 
 ```{r}
 data.f %>% count(Sex)
