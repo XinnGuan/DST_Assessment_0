@@ -23,3 +23,46 @@ train <- read.csv("C:/Users/Danie/OneDrive/Documents/_Uni/Maths/Year 4/Data Scie
 test <- read.csv("C:/Users/Danie/OneDrive/Documents/_Uni/Maths/Year 4/Data Science Toolkit/DST_Assessment_0/Report/01-Data.csv", stringsAsFactors = F, na.strings = c("NA", ""))
 ```
 
+We then set the survival column in test to N/A's and combine the two
+
+```{r}
+test$Survived <- NA
+all <- rbind(train, test)
+
+all$Sex <- as.factor(all$Sex)
+all$Survived <- as.factor(all$Survived)
+all$Pclass <- as.ordered(all$Pclass)
+```
+
+We can then start visualizing the amount of deaths and who died
+
+```{r}
+ggplot(all[!is.na(all$Survived),], aes(x = Survived, fill = Survived)) +
+  geom_bar(stat='count') +
+  labs(x = 'How many people died and survived on the Titanic?') +
+        geom_label(stat='count',aes(label=..count..), size=7) +
+        theme_grey(base_size = 18)
+```
+
+And we can do further analysis on how class affects your chances of survival
+
+```{r}
+p3 <- ggplot(all, aes(x = Pclass, fill = Pclass)) +
+  geom_bar(stat='count', position='dodge') +
+  labs(x = 'Pclass, All data') + geom_label(stat='count', aes(label=..count..)) +
+   theme(legend.position="none") + theme_grey()     
+p4 <- ggplot(all[!is.na(all$Survived),], aes(x = Pclass, fill = Survived)) +
+  geom_bar(stat='count', position='dodge') + labs(x = 'Training data only') +
+        theme(legend.position="none") + theme_grey()
+p5 <- ggplot(all[!is.na(all$Survived),], aes(x = Pclass, fill = Survived)) +
+  geom_bar(stat='count', position='stack') +
+  labs(x = 'Training data only', y= "Count") + facet_grid(.~Sex) +
+        theme(legend.position="none") + theme_grey()
+p6 <- ggplot(all[!is.na(all$Survived),], aes(x = Pclass, fill = Survived)) +
+  geom_bar(stat='count', position='fill') +
+  labs(x = 'Training data only', y= "Percent") + facet_grid(.~Sex) +
+        theme(legend.position="none") + theme_grey()
+
+grid.arrange(p3, p4, p5, p6, ncol=2)
+```
+
