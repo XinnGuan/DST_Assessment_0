@@ -4,5 +4,22 @@ Test code for reading data
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Looking at survival data for passengers on the titanic 
+First we load all required packages
+```{r}
+library(Hmisc)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(caret)
+library(randomForest)
+library(gridExtra)
+library(ROCR)
+library(corrplot)
+```
+and then load the dataset into training and testing data
+
+```{r}
+train <- read.csv("C:/Users/Danie/OneDrive/Documents/_Uni/Maths/Year 4/Data Science Toolkit/DST_Assessment_0/Report/01-Data.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+test <- read.csv("C:/Users/Danie/OneDrive/Documents/_Uni/Maths/Year 4/Data Science Toolkit/DST_Assessment_0/Report/01-Data.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+```
 
