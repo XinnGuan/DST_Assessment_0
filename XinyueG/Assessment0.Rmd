@@ -7,7 +7,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# Install packages
+
+Install packages
 
 ```{r}
 library(readr) #For read_csv
@@ -18,7 +19,7 @@ library(gplots)
 library(plotrix)
 ```
 
-# Import Data
+Import Data
 
 ```{r}
 data <- read_csv("~/Desktop/DST/DST_Assessment_0/Report/01-Data.csv")
@@ -28,30 +29,44 @@ data.f= as.data.frame(data)
 ```{r}
 head(data.f)
 ```
+
 ```{r}
 summary(data.f)
 ```
+
+Let's check how many missing values in each column.
 ```{r}
-barplot((sort(table(data.f[,"Embarked"]))),names.arg=c("Cherbourg","Queenstown","Southampton"))
+sapply(data.f, function(x) sum(is.na(x)))
 ```
-```{r}
-barplot((table(data.f[,"Sex"])),names.arg=c("female","male"))
-```
-
-
-
+Delete unwanted columns
 
 ```{r}
-data.f<-data.f[-which(is.na(data.f$Embarked)),]
-#Remove the rows with NA for Embarked variable.
+data.f<-data.f[,c(2:8,10,12)]
 ```
+
+Deal with missing values in each column.
+
+```{r}
+data.f$Embarked[is.na(data.f$Embarked)]<-mode(data.f$Embarked) 
+#Use mode for the missing "Embarked" values.
+
+data.f$Age[is.na(data.f$Age)]<-mean(data.f$Age,na.rm = T)
+#Use average of the existing age values for the missing "Age" values.
+```
+
+Now we have got rid of all the missing values in our data set.
+
+```{r}
+sapply(data.f, function(x) sum(is.na(x)))
+```
+
 
 ```{r}
 labs=unique(as.character(data.f[,"Embarked"]))
 names(labs)=labs
 
 list=lapply(labs,function(x){
-  data.f[data.f[,"Embarked"]==x,1:11]
+  data.f[data.f[,"Embarked"]==x,1:8]
 })
 #Separate data in to three sub-data by the port of embark.
 ```
@@ -61,19 +76,13 @@ data.f %>% count(Embarked)
 # Count each numbers of each value in the Embarked variable
 ```
 
-
-```{r}
-#datamean=t(sapply(list,function(x)colMeans(x[,c(3,6,7,8,10)])))
-#heatmap.2(datamean,trace="none")
-```
-# If we run this chunk, we will get error, this is because that the Age mean is not calculated since we have missing data.
-
 ```{r}
 #Plot heatmap withou Age variable
-datamean2=t(sapply(list,function(x)colMeans(x[,c(3,7,8,10)])))
+datamean2=t(sapply(list,function(x)colMeans(x[,c(2,5,6,7,8)])))
 heatmap.2(datamean2,trace="none",margins=c(7,3))
 ```
-# From the heat map, we can see that only the fare depend on the port of embark, the other three numerical variables are independent of the port of embark.
+
+From the heat map, we can see that only the fare depend on the port of embark, the other three numerical variables are independent of the port of embark.
 
 
 ```{r}
@@ -103,46 +112,34 @@ male_sur_rate <- sum(male_data$male.Survived)/dim(male_data)[1]
 fe_sur_rate
 male_sur_rate
 ```
-# We see that the survival rate of female is a lot higher than male, this is because that the men on board the ocean liner gave women and children priority access to the lifeboats.
 
-
-
+We see that the survival rate of female is a lot higher than male, this is because that the men on board the ocean liner gave women and children priority access to the lifeboats.
 
 ```{r}
 histStack(x=data.f$Fare,z=factor(data.f$Survived),col=c("red","blue"),main = "Fare Histogram by Survived",ylim=c(0,800))
-legend("topright",legend=c("Survived","Dead"),col=c("blue","red"))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5) #Add legend to indicates data for Survived and Dead
 ```
-# People between 20-40 years old has significantly lower  survival rate. 
+
+People between 20-40 years old has significantly lower  survival rate. 
 ```{r}
 histStack(x=data.f$Age,z=factor(data.f$Survived),col=c("red","blue"),main = "Age Histogram by Survived",ylim=c(0,400))
-legend("topright",legend=c("Survived","Dead"),col=c("blue","red"))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
 ```
-#Create a variable "Familysize" which is the sum of variables "SibSp" and "Parch".
+
+Create a variable "Familysize" which is the sum of variables "SibSp" and "Parch".
+
 ```{r}
 data.f$Familysize=data.f$SibSp+data.f$Parch
 ```
 
 ```{r}
 histStack(x=data.f$Familysize,z=factor(data.f$Survived),col=c("red","blue"),main = "Family size Histogram by Survived")
-legend("topright",legend=c("Survived","Dead"),col=c("blue","red"))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
 ```
-# If we zoom in a little bit, we can see that the family size of 2 or 3 has significantly higher survival rate than family of other sizes.
+
+If we zoom in a little bit, we can see that the family size of 2 or 3 has significantly higher survival rate than family of other sizes.
+
 ```{r}
 histStack(x=data.f$Familysize,z=factor(data.f$Survived),col=c("red","blue"),main = "Family size Histogram by Survived",xlim=c(1,10),ylim=c(0,100))
-legend("topright",legend=c("Survived","Dead"),col=c("blue","red"))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
