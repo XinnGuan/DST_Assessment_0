@@ -1,5 +1,4 @@
-Test code for reading data
-
+This code is taken from https://www.kaggle.com/code/erikbruin/titanic-2nd-degree-families-and-majority-voting/report
 ```{r}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -64,5 +63,15 @@ p6 <- ggplot(all[!is.na(all$Survived),], aes(x = Pclass, fill = Survived)) +
         theme(legend.position="none") + theme_grey()
 
 grid.arrange(p3, p4, p5, p6, ncol=2)
+```
+And even the realtion between the size of family and chances of survival
+
+```{r}
+#creating family size variable (Fsize)
+all$Fsize <- all$SibSp+all$Parch +1
+ggplot(all[!is.na(all$Survived),], aes(x = Fsize, fill = Survived)) +
+  geom_bar(stat='count', position='dodge') +
+  scale_x_continuous(breaks=c(1:11)) +
+  labs(x = 'Family Size') + theme_grey()
 ```
 
