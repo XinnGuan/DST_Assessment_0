@@ -8,12 +8,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r}
-if(!require("readr")) install.packages("readr")
-if(!require("ggplot2")) install.packages("ggplot2")
-if(!require("gridExtra")) install.packages("gridExtra")
-if(!require("dplyr")) install.packages("dplyr")
-if(!require("ggplots")) install.packages("ggplots")
-if(!require("plotrix")) install.packages("plotrix")
+#if(!require("readr")) install.packages("readr")
+#if(!require("ggplot2")) install.packages("ggplot2")
+#if(!require("gridExtra")) install.packages("gridExtra")
+#if(!require("dplyr")) install.packages("dplyr")
+#if(!require("ggplots")) install.packages("ggplots")
+#if(!require("plotrix")) install.packages("plotrix")
 library("fs") # for cross-platform directories (path_wd)
 library("readr") #For read_csv
 library("dplyr")
