@@ -72,21 +72,7 @@ ggplot(all[!is.na(all$Survived),], aes(x = Title, fill = Survived)) +
   labs(x = 'Title') +theme_grey()
 ```
 
-
-
-
-
-
-We then set the survival column in test to N/A's and combine the two
-
-```{r}
-test$Survived <- NA
-all <- rbind(train, test)
-
-all$Sex <- as.factor(all$Sex)
-all$Survived <- as.factor(all$Survived)
-all$Pclass <- as.ordered(all$Pclass)
-```
+\section{Visualising the data}
 
 We can then start visualizing the amount of deaths and who died
 
