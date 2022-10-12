@@ -23,56 +23,56 @@ Import Data
 
 ```{r}
 data <- read_csv("~/Desktop/DST/DST_Assessment_0/Report/01-Data.csv")
-data.f= as.data.frame(data)
+data= as.data.frame(data)
 #read_csv imported data as tbl which is a subclass of data frame, however it behaves differentlt so I convert it to data.frame format.
 ```
 ```{r}
-head(data.f)
+head(data)
 ```
 
 ```{r}
-summary(data.f)
+summary(data)
 ```
 
 Let's check how many missing values in each column.
 ```{r}
-sapply(data.f, function(x) sum(is.na(x)))
+sapply(data, function(x) sum(is.na(x)))
 ```
 Delete unwanted columns
 
 ```{r}
-data.f<-data.f[,c(2:8,10,12)]
+data<-data[,c(2:8,10,12)]
 ```
 
 Deal with missing values in each column.
 
 ```{r}
-data.f$Embarked[is.na(data.f$Embarked)]<-mode(data.f$Embarked) 
+data$Embarked[is.na(data$Embarked)]<-mode(data$Embarked) 
 #Use mode for the missing "Embarked" values.
 
-data.f$Age[is.na(data.f$Age)]<-mean(data.f$Age,na.rm = T)
+data$Age[is.na(data$Age)]<-mean(data$Age,na.rm = T)
 #Use average of the existing age values for the missing "Age" values.
 ```
 
 Now we have got rid of all the missing values in our data set.
 
 ```{r}
-sapply(data.f, function(x) sum(is.na(x)))
+sapply(data, function(x) sum(is.na(x)))
 ```
 
 
 ```{r}
-labs=unique(as.character(data.f[,"Embarked"]))
+labs=unique(as.character(data[,"Embarked"]))
 names(labs)=labs
 
 list=lapply(labs,function(x){
-  data.f[data.f[,"Embarked"]==x,1:8]
+  data[data[,"Embarked"]==x,1:8]
 })
 #Separate data in to three sub-data by the port of embark.
 ```
 
 ```{r}
-data.f %>% count(Embarked)
+data %>% count(Embarked)
 # Count each numbers of each value in the Embarked variable
 ```
 
@@ -86,14 +86,14 @@ From the heat map, we can see that only the fare depend on the port of embark, t
 
 
 ```{r}
-data.f %>% count(Sex)
+data %>% count(Sex)
 ```
 
 ```{r}
-genders=unique(as.character(data.f[,"Sex"]))
+genders=unique(as.character(data[,"Sex"]))
 names(genders)=genders
 genders_data=lapply(genders,function(x){
-  data.f[data.f[,"Sex"]==x,]
+  data[data[,"Sex"]==x,]
 })
 male_data<-genders_data[1]
 female_data<-genders_data[2]
@@ -116,30 +116,30 @@ male_sur_rate
 We see that the survival rate of female is a lot higher than male, this is because that the men on board the ocean liner gave women and children priority access to the lifeboats.
 
 ```{r}
-histStack(x=data.f$Fare,z=factor(data.f$Survived),col=c("red","blue"),main = "Fare Histogram by Survived",ylim=c(0,800))
+histStack(x=data$Fare,z=factor(data$Survived),col=c("red","blue"),main = "Fare Histogram by Survived",ylim=c(0,800))
 legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5) #Add legend to indicates data for Survived and Dead
 ```
 
 People between 20-40 years old has significantly lower  survival rate. 
 ```{r}
-histStack(x=data.f$Age,z=factor(data.f$Survived),col=c("red","blue"),main = "Age Histogram by Survived",ylim=c(0,400))
+histStack(x=data$Age,z=factor(data$Survived),col=c("red","blue"),main = "Age Histogram by Survived",ylim=c(0,400))
 legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
 ```
 
 Create a variable "Familysize" which is the sum of variables "SibSp" and "Parch".
 
 ```{r}
-data.f$Familysize=data.f$SibSp+data.f$Parch
+data$Familysize=data$SibSp+data$Parch
 ```
 
 ```{r}
-histStack(x=data.f$Familysize,z=factor(data.f$Survived),col=c("red","blue"),main = "Family size Histogram by Survived")
+histStack(x=data$Familysize,z=factor(data$Survived),col=c("red","blue"),main = "Family size Histogram by Survived")
 legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
 ```
 
 If we zoom in a little bit, we can see that the family size of 2 or 3 has significantly higher survival rate than family of other sizes.
 
 ```{r}
-histStack(x=data.f$Familysize,z=factor(data.f$Survived),col=c("red","blue"),main = "Family size Histogram by Survived",xlim=c(1,10),ylim=c(0,100))
+histStack(x=data$Familysize,z=factor(data$Survived),col=c("red","blue"),main = "Family size Histogram by Survived",xlim=c(1,10),ylim=c(0,100))
 legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
 ```
