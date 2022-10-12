@@ -22,6 +22,61 @@ train <- read.csv("C:/Users/Danie/OneDrive/Documents/_Uni/Maths/Year 4/Data Scie
 test <- read.csv("C:/Users/Danie/OneDrive/Documents/_Uni/Maths/Year 4/Data Science Toolkit/DST_Assessment_0/Report/01-Data.csv", stringsAsFactors = F, na.strings = c("NA", ""))
 ```
 
+\section{Analysing the Data}
+
+This data set consists of our binary survival variable we are interested, as well as 9 other co-variates that may influence survival. We can start by encoding our categorical variables as factors, with the ticket class variable being ordered in this case.
+
+```{r}
+test$Survived <- NA
+all <- rbind(train, test)
+
+all$Sex <- as.factor(all$Sex)
+all$Survived <- as.factor(all$Survived)
+all$Pclass <- as.ordered(all$Pclass)
+```
+
+Then we can check the incompleteness of the data,
+
+```{r}
+sapply(all, function(x) {sum(is.na(x))})
+```
+We can see that for the most part this data set is complete. Importantly, key variables like Survived, Pclass and Sex have all been recorded, besides the 891 NA observations we are using for the test data. However there are quite large gaps when it comes to Age (Missing 354) and Cabin number (Missing 1374).
+
+
+This kind of data would lend itself very well to a machine learning approach with a testing and training dataset, or simply a basic regression model.
+
+\section{Manipulating the data}
+
+We can also try to deconstruct some of the variables to infer more information. For example, the passenger name is very difficult to use in any kind of analysis, so we can try and turn it into a factor variable based off the title of each person. 
+
+```{r}
+all$Title <- sapply(all$Name, function(x) {strsplit(x, split='[,.]')[[1]][2]})
+all$Title <- sub(' ', '', all$Title) #removing spaces before title
+kable(table(all$Sex, all$Title))
+```
+
+This is better than having over 1700 different names, although we can still reduce the number of dimensions of this new title variable. One way of doing this is grouping similar titles together, such as 'Ms','Miss' and 'Mlle'(Mademoiselle), all referring to young or unmarried women. Similarly we can grouo 'Mrs' and 'Mme'(Madame) as these refer to married women. Anything beside these two categories along with Mr and Master we can group in one 'Rare titles' category as miscellaneous titles.
+
+```{r}
+all$Title[all$Title %in% c("Mlle", "Ms")] <- "Miss"
+all$Title[all$Title== "Mme"] <- "Mrs"
+all$Title[!(all$Title %in% c('Master', 'Miss', 'Mr', 'Mrs'))] <- "Rare Title"
+all$Title <- as.factor(all$Title)
+kable(table(all$Sex, all$Title))
+```
+Now we have a much more clear table we can plot this to get an idea of how Title affects survival
+
+```{r}
+ggplot(all[!is.na(all$Survived),], aes(x = Title, fill = Survived)) +
+  geom_bar(stat='count', position='stack') +
+  labs(x = 'Title') +theme_grey()
+```
+
+
+
+
+
+
 We then set the survival column in test to N/A's and combine the two
 
 ```{r}
@@ -64,7 +119,7 @@ p6 <- ggplot(all[!is.na(all$Survived),], aes(x = Pclass, fill = Survived)) +
 
 grid.arrange(p3, p4, p5, p6, ncol=2)
 ```
-And even the realtion between the size of family and chances of survival
+And even the relation between the size of family and chances of survival
 
 ```{r}
 #creating family size variable (Fsize)
