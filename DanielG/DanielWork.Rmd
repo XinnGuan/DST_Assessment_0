@@ -74,7 +74,7 @@ ggplot(all[!is.na(all$Survived),], aes(x = Title, fill = Survived)) +
 
 \section{Visualising the data}
 
-We can then start visualizing the amount of deaths and who died
+We can then start visualizing the amount of deaths and who died due to the factor variables via bar charts
 
 ```{r}
 ggplot(all[!is.na(all$Survived),], aes(x = Survived, fill = Survived)) +
