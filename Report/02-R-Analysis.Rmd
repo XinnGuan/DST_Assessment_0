@@ -2,24 +2,26 @@
 title: "R-Analysis"
 author: "Tom Blain, Daniel Gardner, Xin Guan, Xinyu Li"
 date: "05/10/2022"
-output:
-  html_document: default
-  pdf_document: default
+output: html_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r}
-if(!require("readr")) install.packages("readr")
-if(!require("ggplot2")) install.packages("ggplot2")
-if(!require("gridExtra")) install.packages("gridExtra")
-if(!require("dplyr")) install.packages("dplyr")
+#if(!require("readr")) install.packages("readr")
+#if(!require("ggplot2")) install.packages("ggplot2")
+#if(!require("gridExtra")) install.packages("gridExtra")
+#if(!require("dplyr")) install.packages("dplyr")
+#if(!require("ggplots")) install.packages("ggplots")
+#if(!require("plotrix")) install.packages("plotrix")
 library("fs") # for cross-platform directories (path_wd)
 library("readr") #For read_csv
 library("dplyr")
 library("knitr") # For kable 
-library("ggplot2") #for plots
+library("ggplot2") # For plots
 library("gridExtra")
+library("gplots")
+library("plotrix")# For general stacked histogram
 ```
 ```{r}
 data <- read_csv(path_wd("01-Data.csv"))
@@ -27,6 +29,16 @@ data<-as.data.frame(data)
 ```
 
 ## Analysing the Data
+
+Let's start with looking at first few rows of data.
+```{r}
+head(data)
+```
+
+Here is a brief summary of the data set.
+```{r}
+summary(data)
+```
 
 This data set consists of our binary survival variable we are interested, as well as 9 other co-variates that may influence survival. We can start by encoding our categorical variables as factors, with the ticket class variable being ordered in this case.
 
@@ -43,7 +55,14 @@ sapply(data, function(x) {sum(is.na(x))})
 ```
 We can see that for the most part this data set is complete. Importantly, key variables like Survived, Pclass and Sex have all been recorded, besides the 891 NA observations we are using for the test data. However there are quite large gaps when it comes to Age (Missing 177) and Cabin number (Missing 687).
 
-This kind of data would lend itself very well to a machine learning approach with a testing and training dataset, or simply a basic regression model.
+We can deal with missing values in each column by fill a suitable substitution such as mode, mean or median.
+```{r}
+data$Embarked[is.na(data$Embarked)]<-mode(data$Embarked) 
+#Use mode for the missing "Embarked" values.
+
+data$Age[is.na(data$Age)]<-mean(data$Age,na.rm = T)
+#Use average of the existing age values for the missing "Age" values.
+```
 
 ## Manipulating the data
 
@@ -72,10 +91,42 @@ ggplot(data[!is.na(data$Survived),], aes(x = Title, fill = Survived)) +
   labs(x = 'Title') +theme_grey()
 ```
 
+Create a variable "Familysize" which is the sum of variables "SibSp" and "Parch". Analysing family size seems to make more sense than analyse siblings and parents separately.
+```{r}
+data$Familysize=data$SibSp+data$Parch
+```
 
 ## Visualising the data
 
 We can then start visualizing the amount of deaths and who died due to the factor variables via bar charts
+
+Let's firstly look at the most basic stacked histogram:
+We see that the survival rate of female is a lot higher than male, this is because that the men on board the ocean liner gave women and children priority access to the lifeboats.
+```{r}
+histStack(x=data$Fare,z=factor(data$Survived),col=c("red","blue"),main = "Fare Histogram by Survived",ylim=c(0,800))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5) #Add legend to indicates data for Survived and Dead
+```
+
+People between 20-40 years old has significantly lower  survival rate. 
+```{r}
+histStack(x=data$Age,z=factor(data$Survived),col=c("red","blue"),main = "Age Histogram by Survived",ylim=c(0,400))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
+```
+
+
+```{r}
+histStack(x=data$Familysize,z=factor(data$Survived),col=c("red","blue"),main = "Family size Histogram by Survived")
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
+```
+
+If we zoom in a little bit, we can see that the family size of 2 or 3 has significantly higher survival rate than family of other sizes.
+
+```{r}
+histStack(x=data$Familysize,z=factor(data$Survived),col=c("red","blue"),main = "Family size Histogram by Survived",xlim=c(1,10),ylim=c(0,100))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
+```
+
+There are other options such as ggplot2, which plots prettier graphs, and contains more graphical features.
 
 ```{r}
 ggplot(data[!is.na(data$Survived),], aes(x = Survived, fill = Survived)) +
