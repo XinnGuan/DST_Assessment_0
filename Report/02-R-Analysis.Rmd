@@ -2,9 +2,7 @@
 title: "R-Analysis"
 author: "Tom Blain, Daniel Gardner, Xin Guan, Xinyu Li"
 date: "05/10/2022"
-output:
-  html_document: default
-  pdf_document: default
+output: html_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
