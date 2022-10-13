@@ -3,13 +3,160 @@ title: "R-Analysis"
 author: "Tom Blain, Daniel Gardner, Xin Guan, Xinyu Li"
 date: "05/10/2022"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+```{r}
+#if(!require("readr")) install.packages("readr")
+#if(!require("ggplot2")) install.packages("ggplot2")
+#if(!require("gridExtra")) install.packages("gridExtra")
+#if(!require("dplyr")) install.packages("dplyr")
+#if(!require("ggplots")) install.packages("ggplots")
+#if(!require("plotrix")) install.packages("plotrix")
+library("fs") # for cross-platform directories (path_wd)
+library("readr") #For read_csv
+library("dplyr")
+library("knitr") # For kable 
+library("ggplot2") # For plots
+library("gridExtra")
+library("gplots")
+library("plotrix")# For general stacked histogram
+```
+```{r}
+data <- read_csv(path_wd("01-Data.csv"))
+data<-as.data.frame(data)
+```
 
+## Analysing the Data
+
+Let's start with looking at first few rows of data.
+```{r}
+head(data)
+```
+
+Here is a brief summary of the data set.
+```{r}
+summary(data)
+```
+
+This data set consists of our binary survival variable we are interested, as well as 9 other co-variates that may influence survival. We can start by encoding our categorical variables as factors, with the ticket class variable being ordered in this case.
+
+```{r}
+data$Sex <- as.factor(data$Sex)
+data$Survived <- as.factor(data$Survived)
+data$Pclass <- as.ordered(data$Pclass)
+```
+
+Then we can check the incompleteness of the data,
+
+```{r}
+sapply(data, function(x) {sum(is.na(x))})
+```
+We can see that for the most part this data set is complete. Importantly, key variables like Survived, Pclass and Sex have all been recorded, besides the 891 NA observations we are using for the test data. However there are quite large gaps when it comes to Age (Missing 177) and Cabin number (Missing 687).
+
+We can deal with missing values in each column by fill a suitable substitution such as mode, mean or median.
+```{r}
+data$Embarked[is.na(data$Embarked)]<-mode(data$Embarked) 
+#Use mode for the missing "Embarked" values.
+data$Age[is.na(data$Age)]<-mean(data$Age,na.rm = T)
+#Use average of the existing age values for the missing "Age" values.
+```
+
+## Manipulating the data
+
+We can also try to deconstruct some of the variables to infer more information. For example, the passenger name is very difficult to use in any kind of analysis, so we can try and turn it into a factor variable based off the title of each person. 
+
+```{r}
+data$Title <- sapply(data$Name, function(x) {strsplit(x, split='[,.]')[[1]][2]})
+data$Title <- sub(' ', '', data$Title) #removing spaces before title
+kable(table(data$Sex, data$Title))
+```
+
+This is better than having over 1700 different names, although we can still reduce the number of dimensions of this new title variable. One way of doing this is grouping similar titles together, such as 'Ms','Miss' and 'Mlle'(Mademoiselle), all referring to young or unmarried women. Similarly we can grouo 'Mrs' and 'Mme'(Madame) as these refer to married women. Anything beside these two categories along with Mr and Master we can group in one 'Rare titles' category as miscellaneous titles.
+
+```{r}
+data$Title[data$Title %in% c("Mlle", "Ms")] <- "Miss"
+data$Title[data$Title== "Mme"] <- "Mrs"
+data$Title[!(data$Title %in% c('Master', 'Miss', 'Mr', 'Mrs'))] <- "Rare Title"
+data$Title <- as.factor(data$Title)
+kable(table(data$Sex, data$Title))
+```
+Now we have a much more clear table we can plot this to get an idea of how Title affects survival
+
+```{r}
+ggplot(data[!is.na(data$Survived),], aes(x = Title, fill = Survived)) +
+  geom_bar(stat='count', position='stack') +
+  labs(x = 'Title') +theme_grey()
+```
+
+Create a variable "Familysize" which is the sum of variables "SibSp" and "Parch". Analysing family size seems to make more sense than analyse siblings and parents separately.
+```{r}
+data$Familysize=data$SibSp+data$Parch
+```
+
+## Visualising the data
+
+We can then start visualizing the amount of deaths and who died due to the factor variables via bar charts
+
+Let's firstly look at the most basic stacked histogram:
+We see that the survival rate of female is a lot higher than male, this is because that the men on board the ocean liner gave women and children priority access to the lifeboats.
+```{r}
+histStack(x=data$Fare,z=factor(data$Survived),col=c("red","blue"),main = "Fare Histogram by Survived",ylim=c(0,800))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5) #Add legend to indicates data for Survived and Dead
+```
+
+People between 20-40 years old has significantly lower  survival rate. 
+```{r}
+histStack(x=data$Age,z=factor(data$Survived),col=c("red","blue"),main = "Age Histogram by Survived",ylim=c(0,400))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
+```
+
+
+```{r}
+histStack(x=data$Familysize,z=factor(data$Survived),col=c("red","blue"),main = "Family size Histogram by Survived")
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
+```
+
+If we zoom in a little bit, we can see that the family size of 2 or 3 has significantly higher survival rate than family of other sizes.
+
+```{r}
+histStack(x=data$Familysize,z=factor(data$Survived),col=c("red","blue"),main = "Family size Histogram by Survived",xlim=c(1,10),ylim=c(0,100))
+legend("topright",legend=c("Survived","Dead"),col=c("blue","red"),lwd=5,cex=0.5)
+```
+
+There are other options such as ggplot2, which plots prettier graphs, and contains more graphical features.
+
+```{r}
+ggplot(data[!is.na(data$Survived),], aes(x = Survived, fill = Survived)) +
+  geom_bar(stat='count') +
+  labs(x = 'How many people died and survived on the Titanic?') +
+        geom_label(stat='count',aes(label=..count..), size=7) +
+        theme_grey(base_size = 18)
+```
+
+And we can do further analysis on how class affects your chances of survival
+
+```{r}
+p3 <- ggplot(data, aes(x = Pclass, fill = Pclass)) +
+  geom_bar(stat='count', position='dodge') +
+  labs(x = 'Pclass') + geom_label(stat='count', aes(label=..count..)) +
+   theme(legend.position="none") + theme_grey()     
+p4 <- ggplot(data[!is.na(data$Survived),], aes(x = Pclass, fill = Survived)) +
+  geom_bar(stat='count', position='dodge') + labs(x = 'Pclass') +
+        theme(legend.position="none") + theme_grey()
+p5 <- ggplot(data[!is.na(data$Survived),], aes(x = Pclass, fill = Survived)) +
+  geom_bar(stat='count', position='stack') +
+  labs(x = 'Pclass', y= "Count") + facet_grid(.~Sex) +
+        theme(legend.position="none") + theme_grey()
+p6 <- ggplot(data[!is.na(data$Survived),], aes(x = Pclass, fill = Survived)) +
+  geom_bar(stat='count', position='fill') +
+  labs(x = 'Pclass', y= "Percent") + facet_grid(.~Sex) +
+        theme(legend.position="none") + theme_grey()
+grid.arrange(p3, p4, p5, p6, ncol=2)
+```
 ```{r}
 #if(!require("readr")) install.packages("readr")
 #if(!require("ggplot2")) install.packages("ggplot2")
