@@ -3,3 +3,15 @@ title: "03-Wrap up"
 date: "06/10/2022"
 output: html_document
 ---
+
+## Wrapup 
+
+We have been able to explore data visualisations. The chanllenge has been dealing with missing data and manipulating the data. 
+
+For creating our figure, we mainly used bar charts to see the count number and proportion of survivors in various passenger classifications.
+
+We also did random forest using python to explore the data classification.
+
+## Conclusions
+
+These data are interesting for analysis and we have found many approaches to clean them, fixing or removing, incorrectly formatted, duplicate, or incomplete data.
