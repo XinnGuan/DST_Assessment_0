@@ -15,6 +15,7 @@ This project has a 25/25/25/25 equity split between the four project partners.
 
 * 01-Data
 * 02-R-Analysis
-* 03-Wrap up
+* 03-Python Random Forest
+* 04-Wrap up
 
 The link to the dataset: https://www.kaggle.com/competitions/titanic/data
